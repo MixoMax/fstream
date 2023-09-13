@@ -1,0 +1,18 @@
+{
+    "movies": [
+      {
+        "title": "string",
+        "id": "integer",
+        //everything below is optional
+        "year": "integer",
+        "genre": ["string"],
+        "director": "string",
+        "writers": ["string"],
+        "actors": ["string"],
+        "plot": "string",
+        "rating": "float",
+        "runtime_minutes": "integer",
+        "poster_url": "string"
+      }
+    ]
+  }
