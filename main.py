@@ -32,7 +32,10 @@ def get_video(id):
         if file_id == id:
             extension = file.split(".")[-1]
             if extension in extensions:
-                return os.path.join(DATA_DIR, file)
+                #return relative path
+                abs_path = os.path.join(DATA_DIR, file)
+                rel_path = os.path.relpath(abs_path)
+                return rel_path
     return None
 
 
@@ -60,7 +63,15 @@ def get_title(id):
     return index_dict.get(id, None)
 
 def get_metadata(id):
-    pass
+    index_path = INDEX_PATH
+    index_dict = {} # id: metadata
+    
+    with open(index_path, "r") as f:
+        temp = json.load(f)
+        for movie in temp["movies"]:
+            index_dict[movie["id"]] = movie
+    
+    return index_dict.get(id, None)
 
 def upload_video(video):
     pass
@@ -134,11 +145,37 @@ def read_static(path):
 
 @app.get("/video/{id}")
 def read_video(id):
-    #return static file
     video_path = get_video(id)
     if video_path is None:
         return "Video not found", 404
     return FileResponse(video_path)
+        
+    
+    
+@app.get("/movie/{id}")
+def read_movie(id):
+    video_url = f"/video/{id}"
+    metadata = get_metadata(id)
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <title>{metadata["title"]}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    </head>
+    <body>
+    <h1>{metadata["title"]}</h1>
+    <h2>{metadata["year"]}</h2>
+    <img src="{metadata["cover_url"]}">
+    
+    <video width="1280" height="720" controls poster="{metadata["cover_url"]}" preload="auto">
+        <source src="{video_url}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    </body>
+    </html>
+    """
+    return HTMLResponse(content=html, status_code=200)
 
 @app.get("/search")
 def read_search(q: str, mode: str = "id"):
@@ -180,9 +217,15 @@ def read_search_results(q: str):
     html = "<html><body>"
     
     for title, id in results.items():
-        html += f'<a href="/video/{id}">{title}</a><br>'
+        html += f"<a href='/movie/{id}'>{title}</a><br>"
     
     html += "</body></html>"
     
     return HTMLResponse(content=html, status_code=200)
-    
+
+@app.get("/metadata/{id}")
+def read_metadata(id):
+    metadata = get_metadata(id)
+    if metadata is None:
+        return "Metadata not found", 404
+    return metadata
