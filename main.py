@@ -16,9 +16,9 @@ app = FastAPI()
 #streaming video
 #sort of like a plex server
 
-# - [ ] search(query) -> list of video ids
-# - [ ] get_video(id) -> get simple html page with video
-# - [ ] get_metadata(id) -> get metadata for video
+# - [x] search(query) -> list of video ids
+# - [x] get_video(id) -> get simple html page with video
+# - [x] get_metadata(id) -> get metadata for video
 # - [ ] upload_video(video) -> upload video to server
 # - [ ] upload_metadata(metadata) -> upload metadata to server
 
@@ -166,9 +166,10 @@ def read_movie(id):
     <body>
     <h1>{metadata["title"]}</h1>
     <h2>{metadata["year"]}</h2>
-    <img src="{metadata["cover_url"]}">
     
-    <video width="1280" height="720" controls poster="{metadata["cover_url"]}" preload="auto">
+    <img src="{metadata.get("cover_url", "")}" alt="Cover image" width="300" height="400">
+    
+    <video width="1280" height="720" controls poster="{metadata.get("cover_url", "")}" preload="auto">
         <source src="{video_url}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
