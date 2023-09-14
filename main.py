@@ -5,6 +5,8 @@ import Levenshtein as lev
 import os
 import json
 
+from config import DATA_DIR, INDEX_PATH
+
 
 os.chdir(os.path.dirname(__file__))
 
@@ -24,19 +26,19 @@ app = FastAPI()
 def get_video(id):
     id = str(id)
     extensions = ["mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "mpg", "mpeg", "m4v"]
-    for file in os.listdir("./data"):
+    for file in os.listdir(DATA_DIR):
         #{id}_{title}.{extension}
         file_id = file.split("_")[0]
         if file_id == id:
             extension = file.split(".")[-1]
             if extension in extensions:
-                return "./data/" + file
+                return os.path.join(DATA_DIR, file)
     return None
 
 
 
 def get_id(title):
-    index_path = "./data/_metadata.json"
+    index_path = INDEX_PATH
     index_dict = {} # title: id
     
     with open(index_path, "r") as f:
@@ -47,7 +49,7 @@ def get_id(title):
     return index_dict.get(title, None)
 
 def get_title(id):
-    index_path = "./data/_metadata.json"
+    index_path = INDEX_PATH
     index_dict = {} # id: title
     
     with open(index_path, "r") as f:
@@ -69,7 +71,7 @@ def upload_metadata(metadata):
 
 
 def search(query):
-    index_path = "./data/_metadata.json"
+    index_path = INDEX_PATH
     index_dict = {} # title: id
     
     #metadata index=

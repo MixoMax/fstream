@@ -56,6 +56,7 @@ for file in os.listdir(path):
     title = " ".join(file.split("_")[1:])
     title = " ".join(title.split(".")[:-1])
     ext = file.split(".")[-1]
+    print(title)
     if ext in extensions:
         r = get_metadata(title)
         id = file.split("_")[0]
