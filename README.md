@@ -9,9 +9,10 @@ hosted on [GitHub](https://www.github.com/MixoMax/fstream)
 ```bash
 git clone https://www.github.com/MixoMax/fstream
 cd fstream
-python3 -m pip install -r requirements.txt
+sudo python3 -m pip install -r requirements.txt
 python3 run_server.py
 ```
+run_server.py will run the server in sudo mode to be able to host on port 80. Therefore you will be prompted to input your password.
 
 ### navigate to [localhost](http://localhost:80)
 
