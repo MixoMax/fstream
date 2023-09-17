@@ -47,6 +47,9 @@ def update_dns(subdomain, proxied=True):
    
 while True:
     time.sleep(1)
-    update_dns("linushorn.dev", proxied=True)
-    update_dns("ssh", proxied=False)
-    update_dns("mc", proxied=False)
+    try:
+        update_dns("@", proxied=True)
+        update_dns("ssh", proxied=False)
+    except Exception as e:
+        print(colored("Error: " + str(e), "red"))
+        continue
