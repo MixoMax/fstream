@@ -6,13 +6,38 @@
     <title>fstream</title>
 </head>
 <body>
+    <script>
+        function login() {
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            //api endpoint: /login?email=...&password=...
+            fetch('/login?userid=' + email + '&password=' + password)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        var session_token = data.session_token;
+                        //store session_token in local storage
+                        localStorage.setItem('session_token', session_token);
+                    }
+                });
+        }
+    </script>
     
+    <!-- User email -->
+    <!-- User password -->
+    <!-- Login button -->
+
+    <input type="text" name="email" id="email" placeholder="Email">
+    <input type="password" name="password" id="password" placeholder="Password">
+    
+
     <!-- query string -->
     <!-- go button -->
     <!-- href to /search_results?q= -->
 
+
     <input type="text" name="q" id="q" placeholder="Search">
-    <button id="go", onclick="window.location.href='/search_results?q=' + document.getElementById('q').value">Go</button>
+    <button id="go", onclick="window.location.href='/search_results?q=' + document.getElementById('q').value + '&session_token=' + localStorage.getItem('session_token')">Go</button>
     
 
 </body>

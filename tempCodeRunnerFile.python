@@ -1,0 +1,23 @@
+#rename.py
+
+import os
+import re
+
+PATH = "D:\Plex\Movies\Disney"
+
+for file in os.listdir(PATH):
+    if file.endswith(".avi"):
+        #rename from "{year} - {title}.avi" to "{title} ({year}).avi"
+        
+        first_four = file[:4]
+        if not all(char.isdigit() for char in first_four):
+            #first four characters are digits, assume it's a year
+            print(f"{file} is already renamed, skipping")
+            continue
+        old_name = os.path.join(PATH, file)
+        print(f"Renaming {old_name}")
+        year, name = file.split(" - ")[0:2]
+        name = name[:-4] #remove .avi
+        new_name = os.path.join(PATH, f"{name} ({year}).avi")
+        os.rename(old_name, new_name)
+        print(f"Renamed {old_name} to {new_name}")
